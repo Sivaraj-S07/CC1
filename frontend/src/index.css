@@ -1,0 +1,224 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  @apply bg-void text-ink-100 font-body antialiased;
+  background-color: #04060B;
+  background-image:
+    radial-gradient(120% 120% at 15% -10%, rgba(62,139,255,0.16) 0%, rgba(4,6,11,0) 55%),
+    radial-gradient(100% 100% at 85% 0%, rgba(139,92,246,0.14) 0%, rgba(4,6,11,0) 50%),
+    radial-gradient(140% 140% at 50% 115%, rgba(34,211,238,0.09) 0%, rgba(4,6,11,0) 60%);
+  background-attachment: fixed;
+}
+
+::selection {
+  background: rgba(62,139,255,0.35);
+}
+
+/*
+ * JetBrains Mono ships with programming ligatures ("calt") enabled, which
+ * fuses sequences like <=, >=, ==, != and -> into single merged glyphs.
+ * That's fine for prose but wrong for a code editor / compiler console,
+ * where a student needs to see and trust the exact characters they typed
+ * (and copy/paste, diffing, etc. all assume one glyph per character).
+ * Disable ligatures everywhere the monospace font is used for code.
+ */
+.font-mono {
+  font-variant-ligatures: none;
+  -webkit-font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "clig" 0, "calt" 0, "dlig" 0;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(120,150,200,0.25);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(120,150,200,0.4);
+  background-clip: padding-box;
+}
+
+:focus-visible {
+  outline: 2px solid #63A6FF;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.glass {
+  background: linear-gradient(180deg, rgba(16,22,38,0.72) 0%, rgba(9,13,24,0.6) 100%);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgba(255,255,255,0.07);
+  position: relative;
+}
+
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0) 35%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.glass-card {
+  @apply glass rounded-2xl shadow-card;
+}
+
+.glass-panel {
+  @apply glass rounded-3xl shadow-card;
+}
+
+.hairline {
+  border-color: rgba(255,255,255,0.08);
+}
+
+.text-glow {
+  text-shadow: 0 0 24px rgba(62,139,255,0.35);
+}
+
+.font-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------
+   Form fields (student join-quiz form)
+   Solid, high-contrast surfaces instead of the translucent glass look so
+   labels, borders and typed text stay clearly readable on every screen.
+------------------------------------------------------------------- */
+.field-label {
+  @apply mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink-300;
+}
+
+.field-input {
+  width: 100%;
+  background: #0d1424;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #eef2fb;
+  border-radius: 0.75rem;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.field-input::placeholder {
+  color: #8a94ab;
+}
+.field-input:hover {
+  border-color: rgba(255, 255, 255, 0.34);
+}
+.field-input:focus {
+  background: #101a2e;
+  border-color: rgba(88, 166, 255, 0.85);
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.22);
+}
+.field-input[aria-invalid="true"] {
+  border-color: rgba(248, 113, 113, 0.85);
+}
+select.field-input {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, #aab4c8 50%),
+    linear-gradient(135deg, #aab4c8 50%, transparent 50%);
+  background-position: right 1rem center, right 0.7rem center;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+select.field-input option {
+  background: #0d1424;
+  color: #eef2fb;
+}
+
+/* ------------------------------------------------------------------
+   Dropdown visibility (app-wide, esp. Admin Portal)
+   Some <select> elements (e.g. those styled with the ".glass" utility
+   used across the Admin Portal) don't opt into the `.field-input`
+   option styling above. Left alone, the browser renders their open
+   option list on its native white/system background while the site's
+   dark theme still forces light text color onto every element,
+   producing white-on-white (invisible) option text.
+
+   Fix it globally for every <select>/<option> in the app so no
+   dropdown - current or future - can end up unreadable, regardless of
+   which class it happens to use.
+------------------------------------------------------------------- */
+select {
+  color-scheme: dark;
+}
+select option {
+  background-color: #0d1424;
+  color: #eef2fb;
+}
+select:disabled {
+  opacity: 0.6;
+}
+
+/* Secure quiz mode: no accidental text selection / long-press menus while a
+   quiz attempt is running. Inputs stay fully usable. */
+body.quiz-locked {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+body.quiz-locked input,
+body.quiz-locked textarea,
+body.quiz-locked [contenteditable="true"] {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* ------------------------------------------------------------------
+   Mobile polish
+   - iOS Safari auto-zooms the viewport when a focused text field's
+     computed font-size is under 16px. A couple of surfaces (the code
+     editor, compact table text) intentionally use 14-15px, which is fine
+     on desktop but triggers that zoom on a phone. Bump every text input
+     up to 16px specifically on narrow viewports so focusing any field
+     never yanks the whole page's zoom level.
+   - Guard against any one section pushing the page wider than the
+     viewport (a long unbroken string, a table that forgot its own
+     overflow wrapper) so the *whole app* never gets its own horizontal
+     scrollbar — individual scrollable panels (tables, the code editor)
+     keep their own internal overflow-x regardless.
+------------------------------------------------------------------- */
+@media (max-width: 640px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+html, body {
+  overflow-x: hidden;
+}
